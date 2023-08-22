@@ -19,5 +19,5 @@ npm install
 以下のようにして、.ts ファイルを実行することができます。
 
 ```console
-npx ts-node hello.ts
+npx ts-node app.ts
 ```
