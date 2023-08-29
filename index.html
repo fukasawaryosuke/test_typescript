@@ -6,15 +6,17 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>プロジェクト管理</title>
     <link rel="stylesheet" href="app.css" />
-    <script src="dist/app.js" defer></script>
+    <!-- テスト -->
     <!-- <script src="dist/foundation.js" defer></script> -->
     <!-- <script src="dist/class.js" defer></script> -->
     <!-- <script src="dist/interface.js" defer></script> -->
     <!-- <script src="dist/advance.js" defer></script> -->
     <!-- <script src="dist/generics.js" defer></script> -->
     <!-- <script src="dist/decorator.js" defer></script> -->
+    <script src="dist/app.js" defer></script>
   </head>
   <body>
+    <!-- フォーム -->
     <template id="project-input">
       <form>
         <div class="form-control">
@@ -32,9 +34,13 @@
         <button type="submit">プロジェクト追加</button>
       </form>
     </template>
+
+    <!-- プロジェクト -->
     <template id="single-project">
       <li></li>
     </template>
+
+    <!-- プロジェクトリスト -->
     <template id="project-list">
       <section class="projects">
         <header>
