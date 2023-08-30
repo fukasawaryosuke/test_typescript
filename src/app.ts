@@ -18,7 +18,6 @@ class Project {
 type Listener<T> = (items: T[]) => void;
 
 class State<T> {
-  //何かしらのイベントが発生した時に実行する関数を格納する配列
   protected listeners: Listener<T>[] = [];
 
   addListener(listenerFn: Listener<T>) {
@@ -26,6 +25,7 @@ class State<T> {
   }
 }
 
+//シングルトンパターン
 class ProjectState extends State<Project> {
   private projects: Project[] = [];
   private static instance: ProjectState;
@@ -60,13 +60,10 @@ class ProjectState extends State<Project> {
   }
 }
 
-//シングルトンパターン
-// インスタンスが1つしか存在しないことを保証するパターン
 const projectState = ProjectState.getInstance();
 
 interface Validatable {
   value: string | number;
-  // ?をつけることでオプショナルにする
   required?: boolean;
   minLength?: number;
   maxLength?: number;
@@ -76,12 +73,9 @@ interface Validatable {
 
 function validate(validatableInput: Validatable) {
   let isValid = true;
-  // valueがstringかnumberかを判定
   if (validatableInput.required) {
-    // stringの場合はlengthを、numberの場合はtoString().lengthを使う
     isValid = isValid && validatableInput.value.toString().trim().length !== 0;
   }
-  // minLengthが設定されているかつ、valueがstringの場合はlengthを、numberの場合はtoString().lengthを使う
   if (
     validatableInput.minLength != null &&
     typeof validatableInput.value === "string"
@@ -89,7 +83,6 @@ function validate(validatableInput: Validatable) {
     isValid =
       isValid && validatableInput.value.length > validatableInput.minLength;
   }
-  // maxLengthが設定されているかつ、valueがstringの場合はlengthを、numberの場合はtoString().lengthを使う
   if (
     validatableInput.maxLength != null &&
     typeof validatableInput.value === "string"
@@ -97,14 +90,12 @@ function validate(validatableInput: Validatable) {
     isValid =
       isValid && validatableInput.value.length < validatableInput.maxLength;
   }
-  // minが設定されているかつ、valueがnumberの場合はvalueを、stringの場合はparseInt(value)を使う
   if (
     validatableInput.min != null &&
     typeof validatableInput.value === "number"
   ) {
     isValid = isValid && validatableInput.value > validatableInput.min;
   }
-  // maxが設定されているかつ、valueがnumberの場合はvalueを、stringの場合はparseInt(value)を使う
   if (
     validatableInput.max != null &&
     typeof validatableInput.value === "number"
@@ -126,7 +117,6 @@ function autobind(
   const adjDescriptor: PropertyDescriptor = {
     configurable: true,
     get() {
-      // thisを束縛する
       const boundFn = originalMethod.bind(this);
       return boundFn;
     },
@@ -146,15 +136,11 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
     insertAtStart: boolean,
     newElementId?: string
   ) {
-    // getElementByIdはHTMLElementを返す → HTMLTemplateElementにキャスト
     this.templateElement = document.getElementById(
       templateId
     )! as HTMLTemplateElement;
-    // getElementByIdはHTMLElementを返す → HTMLDivElementにキャスト
     this.hostElement = document.getElementById(hostElementId)! as T;
-    // template要素の中身を取得
     const importNode = document.importNode(this.templateElement.content, true);
-    // importNodeの中身の最初の要素を取得 → HTMLFormElementにキャスト
     this.element = importNode.firstElementChild as U;
 
     if (newElementId) {
@@ -168,9 +154,7 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
   abstract configure(): void;
   abstract renderContent(): void;
 
-  // テンプレートの中身を取得 → ホスト要素に挿入
   private attach(insertAtBeginning: boolean) {
-    // ホスト要素に挿入
     this.hostElement.insertAdjacentElement(
       insertAtBeginning ? "afterbegin" : "beforeend",
       this.element
@@ -233,7 +217,6 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
   constructor() {
     super("project-input", "app", true, "user-input");
 
-    // フォームの中身を取得
     this.titleInputElement = this.element.querySelector(
       "#title"
     )! as HTMLInputElement;
@@ -276,7 +259,6 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
       max: 1000,
     };
 
-    // validation
     if (
       !validate(titleValidatable) ||
       !validate(descriptionValidatable) ||
